@@ -12,7 +12,11 @@
 model
 
 # data
-data
+data/*
 
 # notebook
 notebook/.ipynb_checkpoints
+notebook/*
+
+# credentials
+credentials/*
