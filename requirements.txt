@@ -5,3 +5,7 @@ jupyter
 notebook
 Sphinx
 flake8
+gspread
+oauth2client
+pandas
+numpy
