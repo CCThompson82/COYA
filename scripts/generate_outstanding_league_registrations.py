@@ -2,6 +2,12 @@
 Call this script to generate a dataframe of players we need to register with the league, and
 upload this list to our googlesheets account.
 """
+import os
+import sys
+ROOT_DIR = os.environ['ROOT_DIR']
+sys.path.append(ROOT_DIR)
+
+
 import numpy as np
 from actonians.data import gsheets_client as gs_client
 from actonians.data import sal_website_client as sal_client
@@ -29,18 +35,19 @@ def find_outstanding_registrations():
 
     outstanding_index = db_utils.find_outstanding(
         internal=internal_registrations, external=external_registrations)
-    raw_outstanding = raw_internal_registrations.iloc[outstanding_index]
-
+    raw_outstanding = raw_internal_registrations.iloc[outstanding_index].reset_index()
     outstanding = db_utils.format_player_registrations(
         raw_dataframe=raw_outstanding, feature_map=LEAGUE_UPLOAD_MAP)
 
     return outstanding
 
 
+
+
 if __name__ == '__main__':
 
     outstanding_registrations = find_outstanding_registrations()
-    print(outstanding_registrations)
+    gs_client.put_registrations(outstanding=outstanding_registrations)
 
 
 

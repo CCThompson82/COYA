@@ -70,7 +70,7 @@ def parse_name(name):
         last = names[-1].title()
         first_ls = names[:-1]
         first_ls[0] = first_ls[0].title()
-        first = ' '.join(first_ls)
+        first = ' '.join(first_ls).title()
         name_index = '_'.join([last, first[:3]])
     return last, first, name_index
 
@@ -124,7 +124,7 @@ def format_player_registrations(raw_dataframe, feature_map):
 
 
 def format_address(dataframe):
-    dataframe['address'] = dataframe['address'].apply(str.title)
+    dataframe['address'] = dataframe['address'].astype(str).apply(str.title)
     return dataframe
 
 
