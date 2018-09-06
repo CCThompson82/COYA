@@ -15,6 +15,7 @@ ARG UID
 RUN useradd docker -u $UID -s /bin/bash -m
 USER docker
 
+ENV ROOT_DIR=/work
 WORKDIR /work
 
 ENTRYPOINT ["/bin/bash"]

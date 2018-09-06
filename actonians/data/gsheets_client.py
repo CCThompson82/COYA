@@ -18,7 +18,7 @@ SCOPES = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/a
 CREDENTIALS = ServiceAccountCredentials.from_json_keyfile_name(CREDENTIAL_PATH, SCOPES)
 CLIENT = gspread.authorize(CREDENTIALS)
 RESPONSES_BASE = 'Actonians AFC Registration {} (Responses)'
-
+REGISTER_BASE = 'Outstanding SAL Registrations ({})'
 
 def get_responses(year='2018-2019'):
     """
@@ -38,3 +38,40 @@ def get_responses(year='2018-2019'):
 
     responses = pd.DataFrame(records_ls[1:], columns=records_ls[0])
     return responses
+
+def put_registrations(outstanding, year='2018-2019'):
+    """
+    Opens the
+
+    Args:
+        year:
+
+    Returns:
+
+    """
+    files_ls = CLIENT.list_spreadsheet_files()
+    filter_bool = [record['name'] == REGISTER_BASE.format(year) for record in files_ls]
+    key = np.array(files_ls)[filter_bool][0]['id']
+
+    registry_con = CLIENT.open_by_key(key)
+    outstanding_con = registry_con.worksheet('league_outstanding')
+
+    cells = []
+    for col_idx, col in enumerate(outstanding.columns):
+        cells.append(gspread.Cell(1, col_idx + 1, col))
+    for row_idx in range(len(outstanding)):
+        for col_idx, value in enumerate(outstanding.iloc[row_idx]):
+            cells.append(gspread.Cell(row_idx + 2, col_idx + 1, value))
+
+    outstanding_con.update_cells(cells)
+
+
+
+
+
+
+
+
+
+
+
