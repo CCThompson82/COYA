@@ -10,6 +10,7 @@ import numpy as np
 from copy import deepcopy
 from datetime import datetime
 
+
 def names_to_dataframe(names):
     """
     Converts a list of str "first last" names into a formatted tuple useful in downstream
@@ -63,16 +64,24 @@ def parse_name(name):
     """
     names = name.split(' ')
     if len(names) == 2:
-        last = names[1].title()
-        first = names[0].title()
-        name_index = '_'.join([names[1].title(), names[0][:3].title()])
+        last = format_name(names[1])
+        first = format_name(names[0])
+        name_index = '_'.join([last, first[:3]])
     else:
-        last = names[-1].title()
-        first_ls = names[:-1]
-        first_ls[0] = first_ls[0].title()
-        first = ' '.join(first_ls).title()
+        last = format_name(names[-1])
+        first = format_names(names[:-1])
         name_index = '_'.join([last, first[:3]])
     return last, first, name_index
+
+
+def format_name(name):
+    """"""
+    return name.lower().title()
+
+
+def format_names(names):
+    names = [format_name(name) for name in names]
+    return ' '.join(names)
 
 
 def make_soup(url):
@@ -116,10 +125,17 @@ def format_player_registrations(raw_dataframe, feature_map):
 
     """
     dataframe = format_feature_names(raw_dataframe=raw_dataframe, feature_map=feature_map)
+    dataframe = reformat_names(dataframe=dataframe)
     dataframe = format_dob(dataframe=dataframe)
     dataframe = format_postcode(dataframe=dataframe)
     dataframe = format_address(dataframe=dataframe)
 
+    return dataframe
+
+
+def reformat_names(dataframe):
+    for column in ['first', 'last']:
+        dataframe[column] = [format_name(name) for name in dataframe[column]]
     return dataframe
 
 

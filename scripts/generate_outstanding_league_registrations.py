@@ -36,12 +36,11 @@ def find_outstanding_registrations():
     outstanding_index = db_utils.find_outstanding(
         internal=internal_registrations, external=external_registrations)
     raw_outstanding = raw_internal_registrations.iloc[outstanding_index].reset_index()
+
     outstanding = db_utils.format_player_registrations(
         raw_dataframe=raw_outstanding, feature_map=LEAGUE_UPLOAD_MAP)
 
     return outstanding
-
-
 
 
 if __name__ == '__main__':
