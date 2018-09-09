@@ -20,6 +20,7 @@ CLIENT = gspread.authorize(CREDENTIALS)
 RESPONSES_BASE = 'Actonians AFC Registration {} (Responses)'
 REGISTER_BASE = 'Outstanding SAL Registrations ({})'
 
+
 def get_responses(year='2018-2019'):
     """
     Retrieves raw member registration googlesheet
@@ -38,6 +39,7 @@ def get_responses(year='2018-2019'):
 
     responses = pd.DataFrame(records_ls[1:], columns=records_ls[0])
     return responses
+
 
 def put_registrations(outstanding, year='2018-2019'):
     """
