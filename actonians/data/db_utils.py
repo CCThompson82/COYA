@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import numpy as np
 from copy import deepcopy
+from fuzzywuzzy import process
 from datetime import datetime
 
 
@@ -62,15 +63,16 @@ def parse_name(name):
     Returns:
         last, first, name_index
     """
+    DIGITS = 3
     names = name.split(' ')
     if len(names) == 2:
         last = format_name(names[1])
         first = format_name(names[0])
-        name_index = '_'.join([last, first[:3]])
+        name_index = '_'.join([last, first[:DIGITS]])
     else:
         last = format_name(names[-1])
         first = format_names(names[:-1])
-        name_index = '_'.join([last, first[:3]])
+        name_index = '_'.join([last, first[:DIGITS]])
     return last, first, name_index
 
 
@@ -97,22 +99,23 @@ def make_soup(url):
     return soup
 
 
-def find_outstanding(internal, external, keep_outstanding=True):
+def find_outstanding(internal, external):
     """
 
     Args:
         internal:
         external:
-        keep_outstanding:
 
     Returns:
 
     """
-    filter_index = np.isin(internal.index_name,
-                           external.index_name)
-    if keep_outstanding:
-        return ~filter_index
-    return filter_index
+    THRESHOLD = 65
+    best_matches = [process.extractOne(query, internal.index_name) for query in external.index_name]
+    registered = [best_match for best_match in best_matches if best_match[1] > THRESHOLD]
+
+    filter_index = np.isin(internal.index_name, [filter_name[0] for filter_name in registered])
+
+    return ~filter_index
 
 
 def format_player_registrations(raw_dataframe, feature_map):
