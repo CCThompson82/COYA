@@ -56,9 +56,8 @@ def put_registrations(outstanding, year='2018-2019'):
     key = np.array(files_ls)[filter_bool][0]['id']
 
     registry_con = CLIENT.open_by_key(key)
-    # registry_con.del_worksheet(registry_con.get_worksheet(index=0))
-    # registry_con.add_worksheet('league_outstanding', *outstanding.shape)
-
+    registry_con.del_worksheet(registry_con.worksheet('league_outstanding'))
+    registry_con.add_worksheet('league_outstanding', *outstanding.shape)
     outstanding_con = registry_con.worksheet('league_outstanding')
 
     cells = []
