@@ -18,7 +18,7 @@ SCOPES = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/a
 CREDENTIALS = ServiceAccountCredentials.from_json_keyfile_name(CREDENTIAL_PATH, SCOPES)
 CLIENT = gspread.authorize(CREDENTIALS)
 RESPONSES_BASE = 'Actonians AFC Registration {} (Responses)'
-REGISTER_BASE = 'Outstanding SAL Registrations ({})'
+REGISTER_BASE = 'Actonians Registry ({})'
 
 
 def get_responses(year='2018-2019'):
@@ -41,7 +41,7 @@ def get_responses(year='2018-2019'):
     return responses
 
 
-def put_registrations(outstanding, year='2018-2019'):
+def put_outstanding_registrations(outstanding, year='2018-2019'):
     """
     Opens the
 
@@ -70,12 +70,31 @@ def put_registrations(outstanding, year='2018-2019'):
     outstanding_con.update_cells(cells)
 
 
+def put_internal_registrations(internal, year='2018-2019'):
+    """
+    Opens the
 
+    Args:
+        year:
 
+    Returns:
 
+    """
+    internal.sort_values('index_name', inplace=True)
+    files_ls = CLIENT.list_spreadsheet_files()
+    filter_bool = [record['name'] == REGISTER_BASE.format(year) for record in files_ls]
+    key = np.array(files_ls)[filter_bool][0]['id']
 
+    registry_con = CLIENT.open_by_key(key)
+    registry_con.del_worksheet(registry_con.worksheet('internal_register'))
+    registry_con.add_worksheet('internal_register', *internal.shape)
+    outstanding_con = registry_con.worksheet('internal_register')
 
+    cells = []
+    for col_idx, col in enumerate(internal.columns):
+        cells.append(gspread.Cell(1, col_idx + 1, col))
+    for row_idx in range(len(internal)):
+        for col_idx, value in enumerate(internal.iloc[row_idx]):
+            cells.append(gspread.Cell(row_idx + 2, col_idx + 1, value))
 
-
-
-
+    outstanding_con.update_cells(cells)

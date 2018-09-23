@@ -40,13 +40,11 @@ def find_outstanding_registrations():
     outstanding = db_utils.format_player_registrations(
         raw_dataframe=raw_outstanding, feature_map=LEAGUE_UPLOAD_MAP)
 
-    return outstanding
+    return outstanding, internal_registrations
 
 
 if __name__ == '__main__':
 
-    outstanding_registrations = find_outstanding_registrations()
-    gs_client.put_registrations(outstanding=outstanding_registrations)
-
-
-
+    outstanding_registrations, internal_registrations = find_outstanding_registrations()
+    gs_client.put_outstanding_registrations(outstanding=outstanding_registrations)
+    gs_client.put_internal_registrations(internal=internal_registrations)
