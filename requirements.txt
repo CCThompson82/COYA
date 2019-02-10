@@ -11,3 +11,4 @@ pandas
 numpy
 bs4
 fuzzywuzzy
+python-Levenshtein

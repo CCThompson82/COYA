@@ -12,7 +12,7 @@ import numpy as np
 import pandas as pd
 from oauth2client.service_account import ServiceAccountCredentials
 
-WORKDIR = '/work'
+WORKDIR = '/workdir'
 CREDENTIAL_PATH = os.path.join(WORKDIR, 'credentials', 'actoniansdb-1534693256775-16ce3ef69b4b.json')
 SCOPES = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
 CREDENTIALS = ServiceAccountCredentials.from_json_keyfile_name(CREDENTIAL_PATH, SCOPES)

@@ -5,10 +5,9 @@ Client API for extracting information from the SAL website
 import re
 from actonians.data import db_utils
 
-MATCH_PAGE_FOR_EXTRACTION = 'http://fulltime-league.thefa.com/DisplayFixture.do?id=18896453'
+MATCH_PAGE_FOR_EXTRACTION = 'http://fulltime-league.thefa.com/DisplayFixture.do?id=19236555'
 
 
-# TODO: Currently pulls all players for the Stewart Hyde Trophy match, which includes Poly players
 def get_registered_players():
     """
     Returns:
