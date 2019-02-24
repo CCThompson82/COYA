@@ -10,6 +10,7 @@ import numpy as np
 from copy import deepcopy
 from fuzzywuzzy import process
 from datetime import datetime
+from dateutil import parser, relativedelta
 
 
 def names_to_dataframe(names):
@@ -109,10 +110,9 @@ def find_outstanding(internal, external):
     Returns:
 
     """
-    THRESHOLD = 65
+    THRESHOLD = 90
     best_matches = [process.extractOne(query, internal.index_name) for query in external.index_name]
     registered = [best_match for best_match in best_matches if best_match[1] > THRESHOLD]
-
     filter_index = np.isin(internal.index_name, [filter_name[0] for filter_name in registered])
 
     return ~filter_index
@@ -173,3 +173,10 @@ def format_feature_names(raw_dataframe, feature_map):
     dataframe.columns = keys
     dataframe.columns = ['first', 'last', 'dob', 'postcode', 'address']
     return dataframe
+
+
+def filter_by_timestamp(df, key, months):
+    """Filter a Timestamp series to entries within the last given months arg"""
+    threshold = datetime.now() - relativedelta.relativedelta(months=months)
+    series = deepcopy(df[key]).apply(parser.parse)
+    return df.loc[series > threshold]
